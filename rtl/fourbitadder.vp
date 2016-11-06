@@ -1,0 +1,29 @@
+// fourbitadder.vp
+
+//; use strict ; # Use a strict interpretation
+//; use warnings FATAL=>qw(all); # Turn warnings into errors
+//; use diagnostics ; # Print helpful info, for errors
+
+module `mname` (
+         input  logic [3:0] a,
+         input  logic [3:0] b,
+         input  logic cin,
+         output logic [3:0] s,
+         output logic cout );
+
+logic cout0, cout1, cout2; 
+
+//;  my $fa0 = generate_base( "fulladder" , "FULLADDER0");
+`$fa0->instantiate()` ( .a(a[0]), .b(b[0]), .cin(cin), .s(s[0]), .cout(cout0) );
+
+//;  my $fa1 = generate_base( "fulladder" , "FULLADDER1");
+`$fa1->instantiate()` ( .a(a[1]), .b(b[1]), .cin(cout0), .s(s[1]), .cout(cout1) );
+
+//;  my $fa2 = generate_base( "fulladder" , "FULLADDER2");
+`$fa2->instantiate()` ( .a(a[2]), .b(b[2]), .cin(cout1), .s(s[2]), .cout(cout2) );
+
+//;  my $fa3 = generate_base( "fulladder" , "FULLADDER3");
+`$fa3->instantiate()` ( .a(a[3]), .b(b[3]), .cin(cout2), .s(s[3]), .cout(cout) );
+
+
+endmodule: `mname`
