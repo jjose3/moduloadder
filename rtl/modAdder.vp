@@ -1,0 +1,80 @@
+// modAdder.vp
+
+//; use strict ; # Use a strict interpretation
+//; use warnings FATAL=>qw(all); # Turn warnings into errors
+//; use diagnostics ; # Print helpful info, for errors
+
+
+module `mname` (
+input logic [7:0] a,
+input logic [7:0] b,
+input logic clk,
+input logic rst,
+output logic [7:0] sum
+);
+
+logic [3:0] a_lsb;
+logic [3:0] b_lsb;
+logic [3:0] a_msb;
+logic [3:0] b_msb;
+logic [3:0] a_msb_s1;
+logic [3:0] b_msb_s1;
+logic [3:0] sum_lsb;
+logic [3:0] sum_lsb_s1;
+logic [3:0] sum_msb;
+logic carry_nxt;
+logic carry;
+
+assign {carry_nxt, sum_lsb[3:0]} = a_lsb[3:0] + b_lsb[3:0];
+assign sum_msb[3:0] = a_msb_s1[3:0] + b_msb_s1[3:0] + {3'b0, carry};
+
+//; for( my $i = 0 ; $i < 4 ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_SUM_MSB".$i);
+`$dff->instantiate()` ( .din(sum_msb[`$i`]), .clk, .rst, .q(sum[`4+$i`]) );
+//; }
+
+//; for( my $i = 0 ; $i < 4 ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_SUM_LSB".$i);
+`$dff->instantiate()` ( .din(sum_lsb_s1[`$i`]), .clk, .rst, .q(sum[`$i`]) );
+//; }
+
+//; for( my $i = 0 ; $i < 4 ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_SUM_LSB_S1".$i);
+`$dff->instantiate()` ( .din(sum_lsb[`$i`]), .clk, .rst, .q(sum_lsb_s1[`$i`]) );
+//; }
+
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_CARRY");
+`$dff->instantiate()` ( .din(carry_nxt), .clk, .rst, .q(carry) );
+
+//; for( my $i = 0 ; $i < 4 ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_A_LSB".$i);
+`$dff->instantiate()` ( .din(a[`$i`]), .clk, .rst, .q(a_lsb[`$i`]) );
+//; }
+
+//; for( my $i = 0 ; $i < 4 ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_B_LSB".$i);
+`$dff->instantiate()` ( .din(b[`$i`]), .clk, .rst, .q(b_lsb[`$i`]) );
+//; }
+
+//; for( my $i = 0 ; $i < 4 ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_A_MSB".$i);
+`$dff->instantiate()` ( .din(a[`4+$i`]), .clk, .rst, .q(a_msb[`$i`]) );
+//; }
+
+//; for( my $i = 0 ; $i < 4 ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_B_MSB".$i);
+`$dff->instantiate()` ( .din(b[`4+$i`]), .clk, .rst, .q(b_msb[`$i`]) );
+//; }
+
+//; for( my $i = 0 ; $i < 4 ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_A_MSB_S1".$i);
+`$dff->instantiate()` ( .din(a_msb[`$i`]), .clk, .rst, .q(a_msb_s1[`$i`]) );
+//; }
+
+//; for( my $i = 0 ; $i < 4 ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_B_MSB_S1".$i);
+`$dff->instantiate()` ( .din(b_msb[`$i`]), .clk, .rst, .q(b_msb_s1[`$i`]) );
+//; }
+
+
+endmodule: `mname`
