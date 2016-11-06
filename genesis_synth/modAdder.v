@@ -57,9 +57,15 @@ logic [3:0] sum_lsb_s1;
 logic [3:0] sum_msb;
 logic carry_nxt;
 logic carry;
+logic cout;
 
-assign {carry_nxt, sum_lsb[3:0]} = a_lsb[3:0] + b_lsb[3:0];
-assign sum_msb[3:0] = a_msb_s1[3:0] + b_msb_s1[3:0] + {3'b0, carry};
+//assign {carry_nxt, sum_lsb[3:0]} = a_lsb[3:0] + b_lsb[3:0];
+
+fourbitadder  FULLADDER_SUM_LSB ( .a(a_lsb[3:0]), .b(b_lsb[3:0]), .cin(1'b0), .s(sum_lsb[3:0]), .cout(carry_nxt) );
+
+//assign sum_msb[3:0] = a_msb_s1[3:0] + b_msb_s1[3:0] + {3'b0, carry};
+
+fourbitadder  FULLADDER_SUM_MSB ( .a(a_msb_s1[3:0]), .b(b_msb_s1[3:0]), .cin(carry), .s(sum_msb[3:0]), .cout(cout) );
 
 dff  D_FLIP_FLOP_SUM_MSB0 ( .din(sum_msb[0]), .clk, .rst, .q(sum[4]) );
 dff  D_FLIP_FLOP_SUM_MSB1 ( .din(sum_msb[1]), .clk, .rst, .q(sum[5]) );
